@@ -34,6 +34,7 @@
         }
 
         .panel {
+            cursor: pointer;
             background: #6B0F9C;
             box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.1);
             color: white;
@@ -78,7 +79,7 @@
             background-image: url(https://source.unsplash.com/3MNzGlQM7qs/1500x1500);
         }
 
-        .panel>* {
+        .panel > * {
             margin: 0;
             width: 100%;
             transition: transform 0.5s;
@@ -150,7 +151,24 @@
     </div>
 
     <script>
+        const panels = document.querySelectorAll('.panel');
 
+        function toggleOpen() {
+            this.classList.toggle('open');
+        }
+
+        function toggleActive(event) {
+            if (event.propertyName.includes('flex')) {
+                this.classList.toggle('open-active');
+            }
+        }
+
+        // Add a click event listener on each panel
+        // Run the function to toggle open class on click
+        // toggleOpen() would run the function on load, we want to reference it here instead
+        panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+
+        panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
     </script>
 </body>
 
