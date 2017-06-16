@@ -18,7 +18,61 @@
 
     <script>
         const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+        const cities = [];
+        const searchInput = document.querySelector('.search');
+        const suggestions = document.querySelector('.suggestions');
 
+        // fetch will return a promise (something will eventually come back)
+        // Use .then() to obtain a blob of data
+        fetch(endpoint)
+            // Response has a json method in it's prototype that will return another promise
+            .then(blob => blob.json())
+            // data cannot be assigned to cities const, so you could change it to a let
+            // If data is pushed to cities, then it is a massive array within an array
+            // Push spread data into cities to obtain an array of objects and maintain using const
+            .then(data => cities.push(...data));
+
+        function findMatches(wordToMatch, cities) {
+            return cities.filter(place => {
+                // This is how you use a variable for match()
+                // 'gi' are flags
+                // g - global, which looks through the entire string
+                // i - insensitive, will not match case
+                const regex = new RegExp(wordToMatch, 'gi');
+
+                // Return the place if the searched word matches the city or state
+                return place.city.match(regex) || place.state.match(regex);
+            });
+        }
+
+        function numberWithCommas(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function displayMatches() {
+            // Run find function with the searched word from the input to obtain the matched places
+            const matchArray = findMatches(this.value, cities);
+
+            // Iterate over the matched array of places and create html for each
+            const html = matchArray.map(place => {
+                const regex = new RegExp(this.value, 'gi');
+                const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+                const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+
+                return `
+                    <li>
+                        <span class="name">${cityName}, ${stateName}</span>
+                        <span class="population">${numberWithCommas(place.population)}</span>
+                    </li>
+                `;
+                // map() returns an array, so we need to join to one big string of html
+            }).join('');
+
+            suggestions.innerHTML = html;
+        }
+
+        searchInput.addEventListener('change', displayMatches);
+        searchInput.addEventListener('keyup', displayMatches);
     </script>
 </body>
 
