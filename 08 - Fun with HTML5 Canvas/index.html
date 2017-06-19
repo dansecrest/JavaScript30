@@ -18,19 +18,42 @@
         canvas.height = window.innerHeight;
 
         // Base canvas setup
-        context.strokeStyle = '#BADA55';
+        context.strokeStyle = '#000';
         context.lineJoin = 'round';
         context.lineCap = 'round';
+        context.lineWidth = 100;
 
         let isDrawing = false;
         let lastX = 0;
         let lastY = 0;
 
         function draw(event) {
+            // Stop the function from running when not moused down
+            if (!isDrawing) return;
+
             console.log(event);
+
+            // Setting up the line
+            context.beginPath();
+            // Start from
+            context.moveTo(lastX, lastY);
+            // Go to
+            context.lineTo(event.offsetX, event.offsetY);
+
+            context.stroke();
+
+            // ES6 Destructuring
+            [lastX, lastY] = [event.offsetX, event.offSetY];
         }
 
+        canvas.addEventListener('mousedown', (event) => {
+            isDrawing = true;
+            [lastX, lastY] = [event.offsetX, event.offSetY];
+        });
+
         canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseout', () => isDrawing = false);
     </script>
 
     <style>
