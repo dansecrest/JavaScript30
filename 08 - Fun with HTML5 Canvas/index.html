@@ -22,6 +22,9 @@
         context.lineJoin = 'round';
         context.lineCap = 'round';
         context.lineWidth = 100;
+        // Blend Modes
+        // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+        context.globalCompositeOperation = 'multiply';
 
         let isDrawing = false;
         let lastX = 0;
