@@ -26,12 +26,18 @@
         let isDrawing = false;
         let lastX = 0;
         let lastY = 0;
+        let hue = 0;
+        let direction = true;
 
         function draw(event) {
             // Stop the function from running when not moused down
             if (!isDrawing) return;
 
             console.log(event);
+
+            // hue = 0 is red
+            // hue = 360 is also red
+            context.strokeStyle = `hsl(${hue}, 100%, 50%)`;
 
             // Setting up the line
             context.beginPath();
@@ -44,6 +50,22 @@
 
             // ES6 Destructuring
             [lastX, lastY] = [event.offsetX, event.offSetY];
+
+            // Increment hue to change along the color spectrum
+            // Hue will start over after reaching 360
+            hue++;
+
+            // Toggle direction boolean based on lineWidth size to make the line get larger or smaller
+            if (context.lineWidth >= 100 || context.lineWidth <= 1) {
+                direction = !direction;
+            }
+
+            // Increment or decrement lineWidth based on direction
+            if (direction) {
+                context.lineWidth++;
+            } else {
+                context.lineWidth--;
+            }
         }
 
         canvas.addEventListener('mousedown', (event) => {
