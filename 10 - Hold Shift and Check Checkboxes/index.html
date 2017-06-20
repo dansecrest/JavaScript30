@@ -32,7 +32,7 @@
         }
 
 
-        input:checked+p {
+        input:checked + p {
             background: #F9F9F9;
             text-decoration: line-through;
         }
@@ -99,9 +99,34 @@
 
     <script>
         const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]');
+        let lastChecked;
 
         function handleCheck(event) {
-            console.log(event);
+            let inBetween = false;
+
+            // Check if they had the shift key down
+            // AND check that they are checking it
+            if (event.shiftKey && this.checked) {
+                // Loop over every single checkbox
+                checkboxes.forEach(checkbox => {
+                    console.log(checkbox);
+
+                    // This check allows for selection in either direction
+                    if (checkbox === this || checkbox === lastChecked) {
+                        // Toggle value from false to true or vice versa
+                        inBetween = !inBetween;
+
+                        console.log('Starting to check the inbetween!');
+                    }
+
+                    // Programmatically check the checkbox if inbetween
+                    if (inBetween) {
+                        checkbox.checked = true;
+                    }
+                });
+            }
+
+            lastChecked = this;
         }
 
         checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck));
